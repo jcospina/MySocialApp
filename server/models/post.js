@@ -9,22 +9,14 @@ var mongoose = require('mongoose');
  */
 var Schema = mongoose.Schema;
 
-var UserSchema = Schema({
-    email: String,
-    name: String,
-    password: String,
-    followers: [
-        {
-            type: Schema.ObjectId,
-            ref: 'User'
-        }
-    ],
-    following: [
-        {
-            type: Schema.ObjectId,
-            ref: 'User'
-        }
-    ]
+var PostSchema = Schema({
+    text: String,
+    date: Date,
+    author: {
+        type: Schema.ObjectId,
+        ref: 'User'
+    },
+    likes: number
 });
 
 /*
@@ -36,4 +28,4 @@ var UserSchema = Schema({
  En la base de datos se crea la colección 'users'
 
  */
-module.exports = mongoose.model('user', UserSchema);
+module.exports = mongoose.model('post', PostSchema);
