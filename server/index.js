@@ -7,6 +7,7 @@
  Para configurar MongoDB desde NodeJS, primero se carga la librería de Mongoose
  */
 var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 /*
  Carga la configuración de express disponible en el archivo app.js. El archivo app.js debe tener la configuración module.exports
  */

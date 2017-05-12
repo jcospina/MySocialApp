@@ -17,6 +17,7 @@ var app = express();
 //--------------------------RUTAS----------------------------
 
 var userApi = require('./routes/user');
+var postApi = require('./routes/post');
 
 //-----------------------------------------------------------
 
@@ -41,6 +42,7 @@ app.use(function (request, response, next) {
 
 //indica a express que todas las rutas empezarán con /api y estarán en el objeto api
 app.use('/api', userApi);
+app.use('/api', postApi);
 
 
 //--------------------------------------------------------------------------------

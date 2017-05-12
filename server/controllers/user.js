@@ -14,9 +14,28 @@ var User = require('../models/user');
 /*
  Para obtener un usuario a partir de su id
  */
-controller.getUser = function (request, response) {
-    response.status(200).send("Hello");
+controller.getUsers = function (request, response) {
+    User.find((err, data) => {
+        if (!err) {
+            response.status(200).send(data);
+        } else {
+            response.status(500).send({message: 'Se produjo un error'})
+        }
+    });
 }
+
+controller.getUser = function (request, response) {
+    var id = request.params.id;
+    User.findOne({_id: id}, (err, data) => {
+        if (!err) {
+            response.status(200).send(data);
+        } else {
+            response.status(500).send({message: 'Se produjo un error'})
+        }
+    });
+}
+
+
 /*
  Para crear un usuario
  */
@@ -30,20 +49,77 @@ controller.createUser = function (request, response) {
     user.name = params.name;
     user.password = params.password;
 
-    /*
-     Para guardar se usa el método save que recibe como parámetro una función de callback. Esta función acepta dos parámetros: err (indica si hay un error) y data (cuando se almacena de forma correcta)
-     */
     user.save((err, data) => {
-        if (err) {
-            //500 se refiere a error en el servidor
-            res.status(500).send({message: 'Error al crear el usuario'})
-        } else {
+        if (!err) {
             response.status(200).send(data);
+        } else {
+            response.status(500).send({message: 'Error al crear el usuario'})
+        }
+    });
+}
+
+controller.loginUser = function (request, response) {
+    var params = request.body;
+    var email = params.email;
+    var password = params.password;
+    User.findOne({email: email, password: password}, (err, data) => {
+        if (!err) {
+            if (data.length > 0) {
+                response.status(200).send(data)
+            } else {
+                response.status(400).send({message: 'El correo o la contraseña son incorrectos'})
+            }
+        } else {
+            response.status(500).send({message: 'Se produjo un error'})
         }
     });
 }
 
 
-module.exports = {
-    controller
-};
+controller.followUser = function (request, response) {
+    var params = request.body;
+    var userFollowing = params.myId;
+    var userToFollow = params.otherId;
+    User.findOneAndUpdate(
+        {_id: userFollowing},
+        {$addToSet: {following: userToFollow}},
+        (err, data) => {
+            if (!err) {
+                response.status(200).send(data);
+            } else {
+                response.status(500).send({message: 'Se produjo un error'});
+            }
+        }
+    );
+}
+
+controller.unfollowUser = function (request, response) {
+    var params = request.body;
+    var userFollowing = params.myId;
+    var userToFollow = params.otherId;
+    User.findOneAndUpdate(
+        {_id: userFollowing},
+        {$pull: {following: userToFollow}},
+        (err, data) => {
+            if (!err) {
+                response.status(200).send(data);
+            } else {
+                response.status(500).send({message: 'Se produjo un error'});
+            }
+        }
+    );
+}
+
+controller.getFollowers = function (request, response) {
+    var userId = request.params.id;
+    User.find({following: {$all: userId}}, {name: 1, email: 1}, (err, data) => {
+        if (!err) {
+            response.status(200).send(data);
+        } else {
+            response.status(500).send({message: 'Se produjo un error'});
+        }
+    });
+}
+
+
+module.exports = {controller};

@@ -13,12 +13,6 @@ var UserSchema = Schema({
     email: String,
     name: String,
     password: String,
-    followers: [
-        {
-            type: Schema.ObjectId,
-            ref: 'User'
-        }
-    ],
     following: [
         {
             type: Schema.ObjectId,
@@ -27,13 +21,4 @@ var UserSchema = Schema({
     ]
 });
 
-/*
- Exporta el modelo Favorito usando la función model de mongoose. Esta función toma dos parámetros, el primero es el nombre singular de la colección y el segundo el esquema.
- Al guardar un registro, mongoose automáticamente busca el plural del nombre de la colección.
- Ej:
- mongoose.model('user', UserSchema);
-
- En la base de datos se crea la colección 'users'
-
- */
 module.exports = mongoose.model('user', UserSchema);
