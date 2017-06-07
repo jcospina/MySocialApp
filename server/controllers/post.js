@@ -14,58 +14,83 @@ var controller = {};
 var Post = require('../models/post');
 var User = require('../models/user');
 
+
 controller.newPost = function (request, response) {
     var params = request.body;
     var post = new Post();
     post.text = params.text;
     post.date = params.date;
     post.author = params.author;
-    post.likes = 0;
+    post.likes = [];
     post.save((err, data) => {
         if (!err) {
             response.status(200).send(data);
         } else {
-            response.status(500).send("Se produjo un error");
+            console.log(err);
+            response.status(500).send({message: "Se produjo un error"});
         }
     })
-}
+};
 
 controller.likePost = function (request, response) {
-    var postId = request.params.id;
-    console.log(postId);
-    Post.findByIdAndUpdate(postId, {$inc: {likes: 1}},
+    var params = request.body;
+    var postId = params.id;
+    var userId = params.userId;
+
+    Post.findByIdAndUpdate(postId, {$addToSet: {likes: userId}},
         function (err, data) {
             if (!err) {
                 response.status(200).send(data);
             } else {
-                response.status(500).send('Se produjo un error');
+                response.status(500).send(err);
             }
         }
     )
 
-}
+};
+
+controller.dislikePost = function (request, response) {
+    var params = request.body;
+    var postId = params.id;
+    var userId = params.userId;
+
+    Post.findByIdAndUpdate(postId, {$pull: {likes: userId}},
+        function (err, data) {
+            if (!err) {
+                response.status(200).send(data);
+            } else {
+                response.status(500).send(err);
+            }
+        }
+    )
+
+};
 
 controller.deletePost = function (request, response) {
     var postId = request.params.id;
     Post.findByIdAndRemove(postId, function (err, data) {
         if (!err) {
-            response.status(200).send("Post eliminado correctamente");
+            if (!data) {
+                response.status(400).send({message: "No existe el post con id: " + postId});
+            } else {
+                response.status(200).send({message: "Post eliminado correctamente"});
+            }
         } else {
             response.status(500).send("Se produjo un error");
         }
     });
-}
+};
 
 controller.getMyPosts = function (request, response) {
     var userId = request.params.id;
-    Post.find({author: {$all: userId}}, (err, data) => {
+    Post.find({author: {$all: userId}}).sort('-date').populate('author', 'name').exec((err, data) => {
         if (!err) {
             response.status(200).send(data);
         } else {
             response.status(500).send({message: 'Se produjo un error'});
         }
     });
-}
+};
 
 controller.getPost = function (request, response) {
     var postId = request.params.id;
@@ -76,24 +101,26 @@ controller.getPost = function (request, response) {
             response.status(500).send({message: 'Se produjo un error'});
         }
     });
-}
+};
 
 controller.getFeed = function (request, response) {
     var userId = request.params.id;
     User.findOne({_id: userId}, {following: 1}, (err, data) => {
-        console.log(data);
         if (!err) {
-            Post.find({author: {$in: data.following}}, (err, feed) => {
-                if (!err) {
-                    response.status(200).send(feed);
-                } else {
-                    response.status(500).send({message: 'Se produjo un error con el feed'});
-                }
-            });
+            var feedUsers = data.following;
+            feedUsers.push(userId);
+            Post.find({author: {$in: feedUsers}}).sort('-date').populate('author', 'name').exec(
+                (err, feed) => {
+                    if (!err) {
+                        response.status(200).send(feed);
+                    } else {
+                        response.status(501).send({message: 'Se produjo un error cargando los mensajes'});
+                    }
+                });
         } else {
-            response.status(500).send({message: 'Se produjo un error con el usuario'});
+            response.status(500).send({message: 'Se produjo un error en el servidor'});
         }
     });
-}
+};
 
 module.exports = {controller};

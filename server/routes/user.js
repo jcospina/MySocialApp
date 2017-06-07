@@ -19,6 +19,8 @@ var userApi = express.Router();
 
 userApi.get("/getUser/:id", userController.controller.getUser);
 userApi.get("/getUsers", userController.controller.getUsers);
+userApi.get("/getUsersToFollow/:id", userController.controller.getUsersToFollow);
+userApi.get("/searchUsers/:id/:search", userController.controller.searchUsers);
 userApi.post("/newUser", middleware.checkEmail, userController.controller.createUser);
 userApi.post("/login", userController.controller.loginUser);
 userApi.post("/followUser", userController.controller.followUser);

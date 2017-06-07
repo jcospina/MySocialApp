@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{title}}</ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="closeModal()">
+        Cerrar
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <div *ngIf="!empty">
+    <ion-item *ngFor="let user of users; let i = index">
+      {{user.name}}
+      <ion-icon name="remove-circle" item-right color="danger" (click)="unfollowUser(i)" *ngIf="showUFBtn"></ion-icon>
+    </ion-item>
+  </div>
+  <ion-item *ngIf="empty" no-lines>
+    No hay usuarios
+  </ion-item>
+</ion-content>

@@ -14,10 +14,6 @@ var bodyParser = require('body-parser');
 //Creamos una instancia de express
 var app = express();
 
-//--------------------------RUTAS----------------------------
-
-var userApi = require('./routes/user');
-var postApi = require('./routes/post');
 
 //-----------------------------------------------------------
 
@@ -33,7 +29,7 @@ app.use(bodyParser.json());
  */
 app.use(function (request, response, next) {
     response.header('Access-Control-Allow-Origin', '*');
-    response.header('Access-Control-Allow-Headers', 'X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method')
+    response.header('Access-Control-Allow-Headers', 'X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method');
     response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
     response.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
 
@@ -41,6 +37,12 @@ app.use(function (request, response, next) {
 });
 
 //indica a express que todas las rutas empezarán con /api y estarán en el objeto api
+
+//--------------------------RUTAS----------------------------
+
+var userApi = require('./routes/user');
+var postApi = require('./routes/post');
+
 app.use('/api', userApi);
 app.use('/api', postApi);
 

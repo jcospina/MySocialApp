@@ -1,3 +1,41 @@
 page-register {
 
+  ion-content {
+
+    background-color: color($colors, primary) !important;
+
+    .register-box {
+      background-color: white;
+      width: 90%;
+      margin: 50px auto;
+      border-radius: 10px;
+
+      .box-title {
+        text-align: center;
+        width: 100%;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom: 2px solid #00286f;
+        background-color: #00286f;
+
+        p {
+          padding: 0;
+          margin: 0;
+          line-height: 3em;
+          font-size: 1.5em;
+          color: white;
+          font-family: Helvetica;
+          font-weight: bold;
+        }
+
+      }
+
+    }
+
+    .submit-button {
+      margin-top: 30px
+    }
+
+  }
+
 }

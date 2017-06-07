@@ -1,0 +1,22 @@
+<ion-card>
+  <ion-card-header class="card-title">
+    ¿Qué quieres compartir?
+  </ion-card-header>
+  <ion-card-content>
+    <ion-textarea [(ngModel)]="text" name="description">
+    </ion-textarea>
+  </ion-card-content>
+  <ion-row no-padding>
+    <ion-col text-center>
+      <button ion-button small outline block color="danger" (click)="closeModal()">
+        Cancelar
+      </button>
+    </ion-col>
+    <ion-col text-center>
+      <button ion-button small block color="primary" (click)="sendPost()">
+        Enviar
+      </button>
+    </ion-col>
+  </ion-row>
+</ion-card>
+

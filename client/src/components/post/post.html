@@ -1,4 +1,16 @@
-<!-- Generated template for the PostComponent component -->
-<div>
-  {{text}}
-</div>
+<ion-item>
+  <div class="post-title">
+    <span class="inner-item-left">{{post.author}}</span>
+    <ion-icon name="heart" isActive="{{post.liked}}" color="danger" class="inner-item-right"
+              (click)="toogleLike()"></ion-icon>
+  </div>
+  <div class="post-content">
+    <h3 text-wrap>{{post.text}}</h3>
+  </div>
+  <div class="post-footer">
+    <span class="inner-item-left">
+      <ion-badge color="primary">{{post.likesCount}} likes</ion-badge>
+    </span>
+    <ion-note class="inner-item-right">{{post.date | amTimeAgo}}</ion-note>
+  </div>
+</ion-item>

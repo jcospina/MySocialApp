@@ -1,3 +1,34 @@
 page-login {
 
+  ion-content {
+    background-color: color($colors, primary) !important;
+
+    .login-box {
+      background-color: white;
+      width: 90%;
+      margin: 100px auto;
+      border-radius: 10px;
+
+      h4 {
+        text-align: center;
+        font-family: Helvetica;
+        font-weight: bold;
+        color: color($colors, primary);
+      }
+
+    }
+
+    .app-logo {
+      display: block;
+      text-align: center;
+      width: 50%;
+      margin: auto;
+    }
+
+    .submit-button {
+      margin-top: 30px
+    }
+
+  }
+
 }

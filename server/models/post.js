@@ -14,9 +14,14 @@ var PostSchema = Schema({
     date: Date,
     author: {
         type: Schema.ObjectId,
-        ref: 'User'
+        ref: 'user'
     },
-    likes: Number
+    likes: [
+        {
+            type: Schema.ObjectId,
+            ref: 'user'
+        }
+    ]
 });
 
 module.exports = mongoose.model('post', PostSchema);

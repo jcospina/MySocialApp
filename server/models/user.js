@@ -10,13 +10,19 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var UserSchema = Schema({
-    email: String,
-    name: String,
+    email: {
+        type: String,
+        index: true
+    },
+    name: {
+        type: String,
+        index: true
+    },
     password: String,
     following: [
         {
             type: Schema.ObjectId,
-            ref: 'User'
+            ref: 'user'
         }
     ]
 });

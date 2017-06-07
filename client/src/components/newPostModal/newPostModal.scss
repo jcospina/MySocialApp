@@ -1,0 +1,29 @@
+ion-modal {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+newPost {
+  margin-top: 10%;
+
+  ion-card {
+
+    border-radius: 10px !important;
+
+    ion-card-header.card-title {
+      font-size: 1.5em;
+      color: white;
+      background-color: color($colors, 'primary');
+    }
+
+    ion-card-content{
+      ion-textarea{
+        margin-top: 10px;
+        border: 1px #c5c5c5 solid;
+      }
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+
+  }
+}

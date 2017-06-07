@@ -20,7 +20,8 @@ postApi.delete("/deletePost/:id", postController.controller.deletePost);
 postApi.get("/getMyPosts/:id", postController.controller.getMyPosts);
 postApi.get("/getPost/:id", postController.controller.getPost);
 postApi.get("/getFeed/:id", postController.controller.getFeed);
-postApi.put("/likePost/:id", postController.controller.likePost);
+postApi.put("/likePost", postController.controller.likePost);
+postApi.put("/dislikePost", postController.controller.dislikePost);
 
 
 /*

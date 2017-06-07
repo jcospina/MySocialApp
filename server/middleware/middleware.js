@@ -21,6 +21,6 @@ middleware.checkEmail = function (request, response, next) {
             response.status(500).send({message: 'Se produjo un error'})
         }
     });
-}
+};
 
 module.exports = middleware;

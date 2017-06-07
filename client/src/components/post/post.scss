@@ -1,3 +1,47 @@
 post {
 
+  font-family: Helvetica;
+
+  .post-title {
+
+    display: flex;
+    color: black;
+    margin-bottom: 10px;
+
+    span {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    ion-icon{
+      font-size: 25px;
+    }
+
+  }
+
+  .post-content {
+    margin-bottom: 10px;
+    h3 {
+      font-size: 1em;
+    }
+  }
+
+  .post-footer {
+    display: flex;
+
+    ion-note {
+      font-size: 14px;
+    }
+  }
+
+  .inner-item-left{
+    flex: 4 1 auto;
+    align-self: flex-start;
+  }
+
+  .inner-item-right{
+    text-align: right;
+    flex: 1 1 auto;
+    align-self: flex-end;
+  }
 }

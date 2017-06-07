@@ -12,7 +12,7 @@ var User = require('../models/user');
 
 
 /*
- Para obtener un usuario a partir de su id
+ Para obtener todos los usuarios de la base de datos
  */
 controller.getUsers = function (request, response) {
     User.find((err, data) => {
@@ -21,8 +21,88 @@ controller.getUsers = function (request, response) {
         } else {
             response.status(500).send({message: 'Se produjo un error'})
         }
+    }).select({name: 1});
+};
+
+/*
+ Para obtener los usuarios que puedo seguir
+ */
+controller.getUsersToFollow = function (request, response) {
+    var userId = request.params.id;
+    User.findOne({_id: userId}, {following: 1}, (err, data) => {
+        if (!err) {
+            var alreadyFollowing = data.following;
+            alreadyFollowing.push(userId);
+            User.aggregate([
+                    {
+                        $match: {
+                            _id: {
+                                $nin: alreadyFollowing
+                            }
+                        }
+                    }, {
+                        $project: {
+                            name: 1
+                        }
+                    }
+                ],
+                (err, users) => {
+                    if (!err) {
+                        response.status(200).send(users);
+                    } else {
+                        response.status(500).send({message: 'Se produjo un error'})
+                    }
+                });
+        } else {
+            response.status(500).send({message: 'Se produjo un error en el servidor'});
+        }
     });
-}
+};
+
+/*
+ Para obtener los usuarios que concuerden con el criterio de búsqueda
+ */
+controller.searchUsers = function (request, response) {
+    var userId = request.params.id;
+    var searchStr = request.params.search;
+
+    User.findOne({_id: userId}, {following: 1}, (err, data) => {
+        if (!err) {
+            var alreadyFollowing = data.following;
+            alreadyFollowing.push(userId);
+            User.aggregate([
+                    {
+                        $match: {
+                            $or: [
+                                {email: searchStr},
+                                {$text: {$search: searchStr}}
+                            ]
+                        }
+                    },
+                    {
+                        $match: {
+                            _id: {
+                                $nin: alreadyFollowing
+                            }
+                        }
+                    }, {
+                        $project: {
+                            name: 1
+                        }
+                    }
+                ],
+                (err, users) => {
+                    if (!err) {
+                        response.status(200).send(users);
+                    } else {
+                        response.status(500).send({message: 'Se produjo un error'})
+                    }
+                });
+        } else {
+            response.status(500).send({message: 'Se produjo un error en el servidor'});
+        }
+    });
+};
 
 controller.getUser = function (request, response) {
     var id = request.params.id;
@@ -33,7 +113,7 @@ controller.getUser = function (request, response) {
             response.status(500).send({message: 'Se produjo un error'})
         }
     });
-}
+};
 
 
 /*
@@ -56,15 +136,19 @@ controller.createUser = function (request, response) {
             response.status(500).send({message: 'Error al crear el usuario'})
         }
     });
-}
+};
 
 controller.loginUser = function (request, response) {
     var params = request.body;
     var email = params.email;
     var password = params.password;
-    User.findOne({email: email, password: password}, (err, data) => {
+    User.findOne({email: email, password: password}, {
+        email: 1,
+        name: 1,
+        following: 1
+    }).populate('following', 'name').exec((err, data) => {
         if (!err) {
-            if (data.length > 0) {
+            if (data != null && data != {}) {
                 response.status(200).send(data)
             } else {
                 response.status(400).send({message: 'El correo o la contraseña son incorrectos'})
@@ -73,7 +157,7 @@ controller.loginUser = function (request, response) {
             response.status(500).send({message: 'Se produjo un error'})
         }
     });
-}
+};
 
 
 controller.followUser = function (request, response) {
@@ -91,15 +175,15 @@ controller.followUser = function (request, response) {
             }
         }
     );
-}
+};
 
 controller.unfollowUser = function (request, response) {
     var params = request.body;
     var userFollowing = params.myId;
-    var userToFollow = params.otherId;
+    var userToUnfollow = params.otherId;
     User.findOneAndUpdate(
         {_id: userFollowing},
-        {$pull: {following: userToFollow}},
+        {$pull: {following: userToUnfollow}},
         (err, data) => {
             if (!err) {
                 response.status(200).send(data);
@@ -108,7 +192,7 @@ controller.unfollowUser = function (request, response) {
             }
         }
     );
-}
+};
 
 controller.getFollowers = function (request, response) {
     var userId = request.params.id;
@@ -119,7 +203,7 @@ controller.getFollowers = function (request, response) {
             response.status(500).send({message: 'Se produjo un error'});
         }
     });
-}
+};
 
 
 module.exports = {controller};
