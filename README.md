@@ -12,6 +12,3 @@ Las funcionalidades básicas de la aplicación son:
 -Ver feed de mensajes
 -Dar "me gusta" a los mensajes de otros
 -Ver/Editar mi perfil
-
-
-Esta aplicación hace parte del curso ofrecido en Udemy
